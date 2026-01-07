@@ -4,10 +4,24 @@ import firebase_admin
 from firebase_admin import credentials, auth, firestore
 from functools import lru_cache
 
+import os
+import json
+import firebase_admin
+from firebase_admin import credentials
+
+service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+
+if not service_account_json:
+    raise RuntimeError("FIREBASE_SERVICE_ACCOUNT env variable not set")
+
+cred = credentials.Certificate(json.loads(service_account_json))
+firebase_admin.initialize_app(cred)
+
+
 # ------------------------
 # Firebase Admin Init
 # ------------------------
-cred = credentials.Certificate("serviceAccountKey.json")
+
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
