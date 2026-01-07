@@ -1,61 +1,56 @@
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, abort
-import firebase_admin
-from firebase_admin import credentials, auth, firestore
 from functools import lru_cache
 
 import os
 import json
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, auth, firestore
 
-service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+# ==================================================
+# Firebase Admin Init (RENDER SAFE – INITIALIZE ONCE)
+# ==================================================
+if not firebase_admin._apps:
+    service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
 
-if not service_account_json:
-    raise RuntimeError("FIREBASE_SERVICE_ACCOUNT env variable not set")
+    if not service_account_json:
+        raise RuntimeError("FIREBASE_SERVICE_ACCOUNT env variable not set")
 
-cred = credentials.Certificate(json.loads(service_account_json))
-firebase_admin.initialize_app(cred)
-
-
-# ------------------------
-# Firebase Admin Init
-# ------------------------
-
-firebase_admin.initialize_app(cred)
+    cred = credentials.Certificate(json.loads(service_account_json))
+    firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-# ------------------------
+# ==================================================
 # Flask Init
-# ------------------------
+# ==================================================
 app = Flask(__name__)
-app.secret_key = "hackathon_secret_key"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "hackathon_secret_key")
 
 app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=False
+    SESSION_COOKIE_SECURE=False  # set True if you force HTTPS later
 )
 
-# ------------------------
+# ==================================================
 # Cached Dashboard Data
-# ------------------------
+# ==================================================
 @lru_cache(maxsize=1)
 def get_dashboard_data():
     users = list(db.collection("users").stream())
     events = list(db.collection("events").stream())
     return users, events
 
-# ------------------------
+# ==================================================
 # Helpers
-# ------------------------
+# ==================================================
 def get_user(uid):
     doc = db.collection("users").document(uid).get()
     return doc.to_dict() if doc.exists else None
 
-# ------------------------
+# ==================================================
 # Routes
-# ------------------------
+# ==================================================
 @app.route("/")
 def index():
     if "uid" in session:
@@ -98,9 +93,9 @@ def set_session():
     except Exception:
         abort(401)
 
-# ------------------------
+# ==================================================
 # Dashboard
-# ------------------------
+# ==================================================
 @app.route("/dashboard")
 def dashboard():
     if "uid" not in session:
@@ -170,9 +165,7 @@ def dashboard():
             else:
                 past_events.append(e)
 
-        # ---------------- STUDENT REGISTRATIONS ----------------
         my_events = []
-
         registrations = db.collection("registrations") \
             .where("user_id", "==", session["uid"]) \
             .stream()
@@ -186,7 +179,6 @@ def dashboard():
                 e["registered_at"] = r.get("registered_at")
                 my_events.append(e)
 
-
         return render_template(
             "student.html",
             username=username,
@@ -197,12 +189,11 @@ def dashboard():
             my_events=my_events
         )
 
-
     abort(403)
 
-# ------------------------
+# ==================================================
 # Admin: Users & Events
-# ------------------------
+# ==================================================
 @app.route("/admin/users")
 def admin_users():
     if "uid" not in session:
@@ -224,98 +215,6 @@ def admin_users():
 def approve_user(uid):
     db.collection("users").document(uid).update({"approved": True})
     return redirect("/admin/users")
-
-
-@app.route("/admin/event/<event_id>/participants")
-def view_participants(event_id):
-    if "uid" not in session:
-        abort(403)
-
-    admin = get_user(session["uid"])
-    if not admin or admin.get("role") != "admin":
-        abort(403)
-
-    event_doc = db.collection("events").document(event_id).get()
-    if not event_doc.exists:
-        abort(404)
-
-    participants = []
-    regs = db.collection("registrations") \
-        .where("event_id", "==", event_id) \
-        .stream()
-
-    for r in regs:
-        p = r.to_dict()
-        user_doc = db.collection("users").document(p["user_id"]).get()
-        if user_doc.exists:
-            p["email"] = user_doc.to_dict().get("email")
-        participants.append(p)
-
-    return render_template(
-        "event_participants.html",
-        event=event_doc.to_dict(),
-        participants=participants
-    )
-
-@app.route("/admin/recent-events")
-def recent_events_page():
-    if "uid" not in session:
-        abort(403)
-
-    admin = get_user(session["uid"])
-    if not admin or admin.get("role") != "admin":
-        abort(403)
-
-    events = []
-    docs = db.collection("events") \
-        .order_by("created_at", direction=firestore.Query.DESCENDING) \
-        .limit(20) \
-        .stream()
-
-    for doc in docs:
-        e = doc.to_dict()
-        e["id"] = doc.id
-        events.append(e)
-
-    return render_template("recent_events.html", events=events)
-
-
-@app.route("/admin/events/edit/<event_id>", methods=["GET", "POST"])
-def edit_event(event_id):
-    if "uid" not in session:
-        abort(403)
-
-    admin = get_user(session["uid"])
-    if not admin or admin.get("role") != "admin":
-        abort(403)
-
-    event_ref = db.collection("events").document(event_id)
-    event_doc = event_ref.get()
-
-    if not event_doc.exists:
-        abort(404)
-
-    event = event_doc.to_dict()
-
-    if request.method == "POST":
-        event_ref.update({
-            "title": request.form["title"],
-            "description": request.form.get("description"),
-            "date": request.form["date"],
-            "time": request.form["time"],
-            "venue": request.form["venue"],
-            "updated_at": datetime.utcnow()
-        })
-
-        get_dashboard_data.cache_clear()
-        return redirect("/admin/events")
-
-    return render_template(
-        "edit_event.html",
-        event=event,
-        event_id=event_id
-    )
-
 
 @app.route("/admin/promote/<uid>", methods=["POST"])
 def promote_user(uid):
@@ -355,9 +254,9 @@ def delete_event(event_id):
     get_dashboard_data.cache_clear()
     return redirect("/admin/events")
 
-# ------------------------
+# ==================================================
 # Event Registration
-# ------------------------
+# ==================================================
 @app.route("/register/<event_id>", methods=["GET", "POST"])
 def register_event(event_id):
     if "uid" not in session:
@@ -407,7 +306,6 @@ def event_details(event_id):
     event = event_doc.to_dict()
     event["id"] = event_id
 
-    # Determine event status
     today = datetime.now().date()
     try:
         event_date = datetime.strptime(event.get("date"), "%Y-%m-%d").date()
@@ -427,17 +325,16 @@ def event_details(event_id):
         status=status
     )
 
-
-# ------------------------
+# ==================================================
 # Logout
-# ------------------------
+# ==================================================
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/login")
 
-# ------------------------
-# Run App
-# ------------------------
+# ==================================================
+# Run App (LOCAL ONLY)
+# ==================================================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
