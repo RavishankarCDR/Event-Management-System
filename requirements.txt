@@ -2,5 +2,3 @@ flask
 firebase-admin
 python-dotenv
 gunicorn
-functools
-datetime
