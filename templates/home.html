@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusEventHub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">CampusEventHub</div>
+
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="login.html" class="btn-outline">Login</a></li>
+      <li><a href="signup.html" class="btn">Sign Up</a></li>
+      <li>
+        <button id="themeToggle" class="theme-btn">🌙</button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Plan, Reserve, and Manage College Events — Smarter</h1>
+    <p>
+      A centralized platform for student councils to book event slots,
+      get approvals, and plan events effortlessly.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="login.html" class="btn">Login as Student</a>
+      <a href="login.html" class="btn-secondary">Login as Admin</a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <h2>Key Features</h2>
+
+    <div class="feature-grid">
+      <div class="card">
+        <h3>📅 Academic Calendar</h3>
+        <p>View available and booked slots to avoid clashes.</p>
+      </div>
+
+      <div class="card">
+        <h3>📝 Event Requests</h3>
+        <p>Select multiple slots and submit events for approval.</p>
+      </div>
+
+      <div class="card">
+        <h3>✅ Approval Workflow</h3>
+        <p>Transparent admin review with real-time updates.</p>
+      </div>
+
+      <div class="card">
+        <h3>🤖 AI Event Assistant</h3>
+        <p>Create posters, WhatsApp invites, and event plans.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how">
+    <h2>How It Works</h2>
+
+    <div class="steps">
+      <div class="step">
+        <span>1</span>
+        <p>Login securely using your college credentials</p>
+      </div>
+      <div class="step">
+        <span>2</span>
+        <p>Request event slots from the academic calendar</p>
+      </div>
+      <div class="step">
+        <span>3</span>
+        <p>Get approval and organize your event</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 CampusEventHub | Built for Academic Institutions</p>
+  </footer>
+
+  <!-- THEME TOGGLE SCRIPT -->
+  <script>
+    const toggle = document.getElementById("themeToggle");
+
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      toggle.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+    });
+  </script>
+
+</body>
+</html>

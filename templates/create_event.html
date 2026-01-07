@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Event</title>
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="/dashboard">📊 Dashboard</a>
+    <a href="/admin/users">👥 Manage Users</a>
+    <a href="/admin/create-event" class="active">➕ Create Event</a>
+    <a href="/admin/events">📅 Manage Events</a>
+    <a href="/logout">🚪 Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="header">
+      <h1>Create Event</h1>
+      <p>Add a new college event</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card" style="max-width: 600px; margin-top: 30px;">
+
+      <form method="POST">
+
+        <div class="form-group">
+          <label>Event Title</label>
+          <input type="text" name="title" placeholder="Hackathon 2026" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" rows="4"
+            placeholder="Brief details about the event"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex:1;">
+            <label>Date</label>
+            <input type="date" name="date" required>
+          </div>
+
+          <div class="form-group" style="flex:1;">
+            <label>Time</label>
+            <input type="time" name="time" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Venue</label>
+          <input type="text" name="venue" placeholder="Auditorium / Lab / Online" required>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <button type="submit" class="btn btn-primary">
+            ➕ Create Event
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+</body>
+</html>

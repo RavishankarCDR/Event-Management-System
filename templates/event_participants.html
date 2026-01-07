@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Participants</title>
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+
+<div class="main">
+  <h2>👥 Participants – {{ event.title }}</h2>
+
+  {% if participants %}
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Branch</th>
+          <th>Year</th>
+          <th>Phone</th>
+          <th>Team</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participants %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td>{{ p.roll_no }}</td>
+          <td>{{ p.branch }}</td>
+          <td>{{ p.year }}</td>
+          <td>{{ p.phone }}</td>
+          <td>{{ p.team_name or "-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No registrations yet.</p>
+  {% endif %}
+</div>
+
+</body>
+</html>

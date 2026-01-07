@@ -1,0 +1,300 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* =========================
+   ROOT LAYOUT (IMPORTANT)
+========================= */
+html, body {
+  height: 100%;
+  background: radial-gradient(circle at top left, #0f172a, #020617);
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at top left, #0f172a, #020617);
+  color: #e5e7eb;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar {
+  width: 240px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 22px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar h2 {
+  margin-bottom: 25px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #cbd5f5;
+  font-size: 14px;
+  transition: 0.25s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: #fff;
+}
+
+/* =========================
+   MAIN CONTENT (SCROLL CONTAINER)
+========================= */
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: radial-gradient(circle at top left, #0f172a, #020617);
+
+
+}
+
+/* =========================
+   HEADER
+========================= */
+.header h1 {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.header p {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* =========================
+   STATS
+========================= */
+.stats-grid {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: rgba(15, 23, 42, 0.75);
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+/* =========================
+   SECTIONS
+========================= */
+.section {
+  margin-top: 45px;
+}
+
+.section h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* =========================
+   EVENTS GRID
+========================= */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 25px;
+}
+
+/* =========================
+   EVENT CARD
+========================= */
+.event-card {
+  background: rgba(15, 23, 42, 0.75);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  transition: 0.25s;
+}
+
+/* =========================
+   EVENT META
+========================= */
+.event-header h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.event-meta {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   EVENT DESCRIPTION
+========================= */
+.event-description {
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.event-description.collapsed {
+  max-height: 3.6em;
+}
+
+.event-description.expanded {
+  max-height: 500px;
+}
+
+/* =========================
+   EVENT ACTIONS
+========================= */
+.event-actions.horizontal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  gap: 10px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn-secondary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.25s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.45);
+}
+
+.btn-link {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.25s;
+}
+
+.btn-link:hover {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+/* =========================
+   BADGES
+========================= */
+.badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+}
+
+.event-status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+/* =========================
+   DARK SCROLLBAR
+   (Does NOT affect layout)
+========================= */
+
+/* Chrome, Edge, Safari */
+.main::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.main::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(99, 102, 241, 0.6),
+    rgba(139, 92, 246, 0.6)
+  );
+  border-radius: 10px;
+}
+
+.main::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(99, 102, 241, 0.9),
+    rgba(139, 92, 246, 0.9)
+  );
+}
+
+/* Firefox */
+.main {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99,102,241,0.7) rgba(15,23,42,0.95);
+}
+
+/* =========================
+   FIX DESCRIPTION OVERFLOW
+========================= */
+.card p,
+.event-description,
+.form-group div {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    padding: 20px;
+  }
+}
+
+

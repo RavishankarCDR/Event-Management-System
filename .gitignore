@@ -1,0 +1,13 @@
+# Secrets
+ServiceAccountKey.json
+config
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+config/

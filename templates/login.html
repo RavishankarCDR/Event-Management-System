@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+
+  <link rel="stylesheet" href="/static/style.css">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    // 🔥 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6EE9CM_-YwcYDPlUNAZt_ilJGVv54RX0",
+      authDomain: "event-management-system-9edf2.firebaseapp.com",
+      projectId: "event-management-system-9edf2",
+      storageBucket: "event-management-system-9edf2.firebasestorage.app",
+      messagingSenderId: "357746171640",
+      appId: "1:357746171640:web:0fa3e81e472d2fe1b8250d",
+      measurementId: "G-X650YB1679"
+    };
+
+    // 🔥 Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // =========================
+    // LOGIN HANDLER
+    // =========================
+    window.loginUser = async (event) => {
+      event.preventDefault(); // ✅ prevents reload
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+
+        await userCred.user.reload();
+
+        if (!userCred.user.emailVerified) {
+          alert("Please verify your email first.");
+          window.location.href = "/verify-email";
+          return;
+        }
+
+        // 🔐 Get fresh ID token
+        const idToken = await userCred.user.getIdToken(true);
+
+        // 🔁 Send token to Flask
+        await fetch("/set-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ idToken })
+        });
+
+        // ✅ Go to dashboard
+        window.location.href = "/dashboard";
+
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    // =========================
+    // FORGOT PASSWORD
+    // =========================
+    window.resetPassword = async () => {
+      const email = document.getElementById("email").value;
+
+      if (!email) {
+        alert("Please enter your email first.");
+        return;
+      }
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Password reset link sent to your email.");
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <div class="auth-container">
+    <h2>Login</h2>
+    <p>Access your dashboard</p>
+
+    <!-- ✅ FORM ENABLES ENTER KEY -->
+    <form onsubmit="loginUser(event)">
+
+      <div class="form-group">
+        <input
+          id="email"
+          type="email"
+          placeholder="Email"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <input
+          id="password"
+          type="password"
+          placeholder="Password"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="footer-text">
+      <a href="javascript:void(0)" onclick="resetPassword()">Forgot password?</a>
+    </div>
+
+    <div class="footer-text">
+      New user? <a href="/register">Register</a>
+    </div>
+  </div>
+</body>
+</html>

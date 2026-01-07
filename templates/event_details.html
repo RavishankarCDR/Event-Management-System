@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ event.title }}</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>📅 Event</h2>
+    <a href="/dashboard">⬅ Back to Dashboard</a>
+    <a href="/logout">🚪 Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" style="display:flex; justify-content:center;">
+
+    <!-- CENTERED CONTAINER -->
+    <div style="width:100%; max-width:800px;">
+
+      <!-- HEADER -->
+      <div class="header" style="text-align:center;">
+        <h1>{{ event.title }}</h1>
+        <p>Complete event information</p>
+      </div>
+
+      <!-- BIG READ-ONLY FORM CARD -->
+      <div class="card">
+
+        <!-- STATUS -->
+        <div style="text-align:center; margin-bottom:25px;">
+          {% if status == "ongoing" %}
+            <span class="event-status">LIVE</span>
+          {% elif status == "upcoming" %}
+            <span class="badge">Upcoming</span>
+          {% else %}
+            <span class="badge">Completed</span>
+          {% endif %}
+        </div>
+
+        <!-- FIELD: DATE -->
+        <div class="form-group">
+          <label>📅 Date</label>
+          <div class="form-group">
+            <div style="padding:12px 14px; background:rgba(255,255,255,0.05); border-radius:12px;">
+              {{ event.date }}
+            </div>
+          </div>
+        </div>
+
+        <!-- FIELD: TIME -->
+        <div class="form-group">
+          <label>⏰ Time</label>
+          <div style="padding:12px 14px; background:rgba(255,255,255,0.05); border-radius:12px;">
+            {{ event.time }}
+          </div>
+        </div>
+
+        <!-- FIELD: VENUE -->
+        <div class="form-group">
+          <label>📍 Venue</label>
+          <div style="padding:12px 14px; background:rgba(255,255,255,0.05); border-radius:12px;">
+            {{ event.venue }}
+          </div>
+        </div>
+
+        <!-- FIELD: DESCRIPTION -->
+        {% if event.description %}
+        <div class="form-group">
+          <label>📝 Description</label>
+          <div style="
+            padding:16px;
+            background:rgba(255,255,255,0.05);
+            border-radius:12px;
+            line-height:1.7;
+            color:#e5e7eb;
+          ">
+            {{ event.description }}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- ACTION -->
+        <div style="margin-top:30px; text-align:center;">
+          {% if status != "past" %}
+            <a href="/register/{{ event.id }}" class="btn-secondary">
+              🚀 Register for Event
+            </a>
+          {% else %}
+            <span class="badge">Registration Closed</span>
+          {% endif %}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

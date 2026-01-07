@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+
+  <!-- ✅ Correct Flask static path -->
+  <link rel="stylesheet" href="/static/style.css">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6EE9CM_-YwcYDPlUNAZt_ilJGVv54RX0",
+      authDomain: "event-management-system-9edf2.firebaseapp.com",
+      projectId: "event-management-system-9edf2",
+      storageBucket: "event-management-system-9edf2.firebasestorage.app",
+      messagingSenderId: "357746171640",
+      appId: "1:357746171640:web:0fa3e81e472d2fe1b8250d",
+      measurementId: "G-X650YB1679"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.registerUser = async () => {
+      const username = document.getElementById("usernameInput").value.trim();
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+      const roleInput = document.querySelector('input[name="role"]:checked');
+      const errorBox = document.getElementById("errorBox");
+
+      errorBox.style.display = "none";
+
+      if (!username || !email || password.length < 6 || !roleInput) {
+        errorBox.innerText = "Fill all fields correctly";
+        errorBox.style.display = "block";
+        return;
+      }
+    
+      if (roleInput.value === "admin" && !email.endsWith("@college.edu")) {
+        errorBox.innerText = "Admin must use official college email";
+        errorBox.style.display = "block";
+        return;
+      }
+    
+      const finalRole =
+        roleInput.value === "admin" && email.endsWith("@college.edu")
+          ? "admin"
+          : "student";
+    
+      try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      
+        await sendEmailVerification(userCred.user);
+      
+        await setDoc(doc(db, "users", userCred.user.uid), {
+          username: username,
+          email: email,
+          role: finalRole,
+          
+        });
+      
+        alert("Verification email sent. Please check your inbox.");
+        window.location.href = "/verify-email";
+      
+      } catch (err) {
+        errorBox.innerText = err.message;
+        errorBox.style.display = "block";
+      }
+    };
+
+  </script>
+</head>
+
+<body>
+  <div class="auth-container">
+    <h2>Create Account</h2>
+    <p>College Event Management</p>
+
+    <div class="form-group">
+      <input id="usernameInput" placeholder="Full Name / Username">
+    </div>
+
+
+    <div class="form-group">
+      <input id="emailInput" placeholder="Email">
+    </div>
+
+    <div class="form-group">
+      <input id="passwordInput" type="password" placeholder="Password">
+    </div>
+
+    <div class="role-group">
+      <label><input type="radio" name="role" value="student"> Student</label>
+      <label><input type="radio" name="role" value="admin"> Admin</label>
+    </div>
+
+    <button onclick="registerUser()">Register</button>
+
+    <div id="errorBox" class="error"></div>
+
+    <div class="footer-text">
+      Already registered? <a href="/login">Login</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify Email</title>
+  <link rel="stylesheet" href="/static/style.css">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6EE9CM_-YwcYDPlUNAZt_ilJGVv54RX0",
+      authDomain: "event-management-system-9edf2.firebaseapp.com",
+      projectId: "event-management-system-9edf2",
+      storageBucket: "event-management-system-9edf2.firebasestorage.app",
+      messagingSenderId: "357746171640",
+      appId: "1:357746171640:web:0fa3e81e472d2fe1b8250d",
+      measurementId: "G-X650YB1679"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.resendVerification = async () => {
+      if (auth.currentUser) {
+        await sendEmailVerification(auth.currentUser);
+        alert("Verification email resent!");
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <div class="auth-container">
+    <h2>Verify Your Email</h2>
+    <p>
+      We’ve sent a verification link to your email.<br>
+      Please verify before logging in.
+    </p>
+
+    <button onclick="resendVerification()">Resend Email</button>
+
+    <div class="footer-text">
+      After verification, <a href="/login">Login</a>
+    </div>
+  </div>
+</body>
+</html>

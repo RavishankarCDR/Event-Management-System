@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Recent Events</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="/dashboard">📊 Dashboard</a>
+    <a href="/admin/recent-events" class="active">📌 Recent Events</a>
+    <a href="/admin/users">👥 Manage Users</a>
+    <a href="/admin/create-event">➕ Create Event</a>
+    <a href="/admin/events">📅 Manage Events</a>
+    <a href="/logout">🚪 Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="header">
+      <h1>📌 Recent Events</h1>
+      <p>Latest events created in the system</p>
+    </div>
+
+    {% if events %}
+    <div class="events-grid">
+      {% for event in events %}
+      <div class="event-card">
+
+        <div class="event-header">
+          <h3>{{ event.title }}</h3>
+        </div>
+
+        <div class="event-meta">
+          📅 {{ event.date }} <br>
+          ⏰ {{ event.time }} <br>
+          📍 {{ event.venue }}
+        </div>
+
+        {% if event.description %}
+        <div class="event-description collapsed" id="desc-{{ event.id }}">
+          {{ event.description }}
+        </div>
+        {% endif %}
+
+        <div class="event-actions horizontal-actions">
+          <a href="/event/{{ event.id }}" class="btn-secondary">
+            Read more
+          </a>
+
+
+          <a href="/admin/event/{{ event.id }}/participants" class="btn-secondary">
+            👥 Participants
+          </a>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:#94a3b8;">No events found.</p>
+    {% endif %}
+
+  </div>
+
+  <script>
+    function toggleDescription(id, link) {
+      const desc = document.getElementById("desc-" + id);
+      if (!desc) return;
+
+      if (desc.classList.contains("collapsed")) {
+        desc.classList.remove("collapsed");
+        desc.classList.add("expanded");
+        link.innerText = "Read less";
+      } else {
+        desc.classList.remove("expanded");
+        desc.classList.add("collapsed");
+        link.innerText = "Read more";
+      }
+    }
+  </script>
+
+</body>
+
+</html>

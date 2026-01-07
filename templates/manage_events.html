@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Events</title>
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="/dashboard">📊 Dashboard</a>
+    <a href="/admin/recent-events">📌 Recent Events</a>
+    <a href="/admin/users">👥 Manage Users</a>
+    <a href="/admin/create-event">➕ Create Event</a>
+    <a href="/admin/events" class="active">📅 Manage Events</a>
+    <a href="/logout">🚪 Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>📅 Manage Events</h1>
+      <p>Create, edit, delete events and view participants</p>
+    </div>
+
+    {% if events %}
+    <div class="events-grid">
+      {% for event in events %}
+      <div class="event-card">
+
+        <!-- EVENT HEADER -->
+        <div class="event-header">
+          <h3>{{ event.title }}</h3>
+        </div>
+
+        <!-- EVENT META -->
+        <div class="event-meta">
+          📅 {{ event.date }} <br>
+          ⏰ {{ event.time }} <br>
+          📍 {{ event.venue }}
+        </div>
+
+        {% if event.description %}
+        <div class="event-description collapsed" id="desc-{{ event.id }}">
+          {{ event.description }}
+        </div>
+        {% endif %}
+
+        <!-- ACTIONS -->
+        <div class="event-actions horizontal-actions">
+
+
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <a href="/admin/event/{{ event.id }}/participants" class="btn-secondary">
+              👥 Participants
+            </a>
+
+            <a href="/admin/events/edit/{{ event.id }}" class="btn-secondary">
+              ✏ Edit
+            </a>
+            <a href="/event/{{ event.id }}" class="btn-secondary">
+              Read more
+            </a>
+
+            <form action="/admin/events/delete/{{ event.id }}" method="POST"
+              onsubmit="return confirm('Are you sure you want to delete this event?');" style="display:inline;">
+              <button type="submit" class="btn-danger">
+                🗑 Delete
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:#94a3b8;">No events created yet.</p>
+    {% endif %}
+
+  </div>
+
+  <!-- JS -->
+  <script>
+    function toggleDescription(eventId, link) {
+      const desc = document.getElementById("desc-" + eventId);
+      if (!desc) return;
+
+      if (desc.classList.contains("collapsed")) {
+        desc.classList.remove("collapsed");
+        desc.classList.add("expanded");
+        link.innerText = "Read less";
+      } else {
+        desc.classList.remove("expanded");
+        desc.classList.add("collapsed");
+        link.innerText = "Read more";
+      }
+    }
+  </script>
+
+</body>
+
+</html>

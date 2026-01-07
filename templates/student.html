@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>🎓 Student Panel</h2>
+    <a href="/dashboard" class="active">🏠 Dashboard</a>
+    <a href="/logout">🚪 Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>Welcome, {{ username }} 🎓</h1>
+      <p>Your college event hub</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>📅 Upcoming Events</h3>
+        <p>{{ upcoming_events }}</p>
+      </div>
+    </div>
+
+    <!-- ===================== MY EVENTS ===================== -->
+    <div class="section">
+      <h2>🎟 My Participated Events</h2>
+
+      {% if my_events %}
+      <div class="events-grid">
+        {% for event in my_events %}
+        <div class="event-card">
+          <div class="event-header">
+            <h3>{{ event.title }}</h3>
+          </div>
+
+          <div class="event-meta">
+            📅 {{ event.date }} <br>
+            ⏰ {{ event.time }} <br>
+            📍 {{ event.venue }}
+          </div>
+
+          <div class="event-actions horizontal-actions">
+            <span class="badge badge-granted">Registered</span>
+            <a href="/event/{{ event.id }}" class="btn-secondary">View Details</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:#94a3b8;">You haven’t registered for any events yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- ===================== ONGOING EVENTS ===================== -->
+    <div class="section">
+      <h2>🟢 Ongoing Events</h2>
+
+      {% if ongoing_events %}
+      <div class="events-grid">
+        {% for event in ongoing_events %}
+        <div class="event-card">
+
+          <div class="event-header">
+            <h3>{{ event.title }}</h3>
+            <span class="event-status">LIVE</span>
+          </div>
+
+          <div class="event-meta">
+            📍 {{ event.venue }} <br>
+            ⏰ {{ event.time }}
+          </div>
+
+          <div class="event-actions horizontal-actions">
+            <a href="/event/{{ event.id }}" class="btn-secondary">
+              Read more
+            </a>
+
+            <a href="/register/{{ event.id }}" class="btn-secondary">
+              Join Event
+            </a>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:#94a3b8;">No events are currently live.</p>
+      {% endif %}
+    </div>
+
+    <!-- ===================== UPCOMING EVENTS ===================== -->
+    <div class="section">
+      <h2>🔵 Upcoming Events</h2>
+
+      {% if upcoming_events_list %}
+      <div class="events-grid">
+        {% for event in upcoming_events_list %}
+        <div class="event-card">
+
+          <div class="event-header">
+            <h3>{{ event.title }}</h3>
+          </div>
+
+          <div class="event-meta">
+            📅 {{ event.date }} <br>
+            ⏰ {{ event.time }} <br>
+            📍 {{ event.venue }}
+          </div>
+
+          <div class="event-actions horizontal-actions">
+            <a href="/event/{{ event.id }}" class="btn-secondary">
+              Read more
+            </a>
+
+            <a href="/register/{{ event.id }}" class="btn-secondary">
+              Register
+            </a>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:#94a3b8;">No upcoming events right now.</p>
+      {% endif %}
+    </div>
+
+    <!-- ===================== PAST EVENTS ===================== -->
+    <div class="section">
+      <h2>⚫ Past Events</h2>
+
+      {% if past_events %}
+      <div class="events-grid">
+        {% for event in past_events %}
+        <div class="event-card" style="opacity:0.6;">
+
+          <div class="event-header">
+            <h3>{{ event.title }}</h3>
+          </div>
+
+          <div class="event-meta">
+            📅 {{ event.date }} <br>
+            ⏰ {{ event.time }} <br>
+            📍 {{ event.venue }}
+          </div>
+
+          <div class="event-actions horizontal-actions">
+            <span class="badge">Completed</span>
+            <a href="/event/{{ event.id }}" class="btn-secondary">View</a>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:#94a3b8;">No past events yet.</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+</body>
+</html>
